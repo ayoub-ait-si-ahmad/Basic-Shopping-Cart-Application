@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { getProducts, Product } from "../../app/api";
 import styles from "./Products.module.css";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { fetchedProducts } from "./productsSlice";
 
 export function Products() {
-  const [products, setProducts] = useState<Product[]>([]);
-  useEffect(() => {
-    getProducts().then((products) => {
-      setProducts(products);
-    });
-  }, []);
+const dispatch = useAppDispatch();
+useEffect(()=> {
+  getProducts().then((products)=> {
+    dispatch(fetchedProducts(products));
+  })})
+  const products= useAppSelector((state) =>state.products.products)
   return (
     <main className="page">
       <ul className={styles.products}>
-        {products.map((product) => (
+        {Object.values(products).map((product) => (
           <li key={product.id}>
             <article className={styles.product}>
               <figure>
